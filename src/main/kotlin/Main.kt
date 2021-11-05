@@ -1,20 +1,67 @@
-import java.io.File
-import java.security.MessageDigest
-import InputReader
-
 fun main(args: Array<String>) {
 
     // Declare our Hasher
     val hash256 : Hash256 = Hash256()
-    val inputReader :InputReader
 
-     val strings = InputReader()
-
-    println(strings)
-
-
+    readInput()
 
 }
+
+fun readInput() : HashMap<String,String>{
+
+    var reader : String? = null
+    do{
+
+        print("Input E -> Encode\t|\tC -> Check\t|\tQ -> Quit: ")
+        reader = readLine().toString().lowercase()
+
+        // Loop for initial Input (e or q) e -> For Encoding , q -> End
+        when(reader){
+
+            "e"-> {
+                 encode()
+            }
+
+            "c"->{
+                println("End")
+            }
+            "q" ->{
+                println("GoodBye")
+            }
+            else -> println("Input not Valid")
+
+        }
+
+    }while(reader != "q")
+
+    return HashMap<String,String>()
+}
+
+fun encode() {
+
+    println("Type Ok to end each transaction ")
+
+    var reader : String?
+    val accounts : MutableList<Account> = mutableListOf()
+    val inputReader : InputReader = InputReader()
+    var currentBlock : Block? = null
+
+    do{
+        if(currentBlock == null){
+             currentBlock = Block() // create here the genesis Block
+            println("Genesis Block Created")
+        }
+
+        reader = readLine().toString().lowercase()
+
+
+    }while(reader != "q")
+
+}
+
+
+
+
 // Dito Muna
 //
 ////Create checksum for this file
