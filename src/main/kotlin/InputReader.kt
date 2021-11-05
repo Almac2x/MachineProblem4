@@ -1,12 +1,20 @@
-abstract class InputReader {
+class InputReader {
+
+    init {
+        readInput()
+    }
 
 
-    fun readInput(input : String) : MutableList<String>?{
+      fun readInput() : String{
 
+        var reader : String? = null
+        do{
 
+            reader = readLine().toString()
 
+        }while(reader == "nani")
 
-        return null
+        return "nill"
     }
 
 }

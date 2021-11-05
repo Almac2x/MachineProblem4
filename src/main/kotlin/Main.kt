@@ -1,16 +1,16 @@
 import java.io.File
 import java.security.MessageDigest
+import InputReader
 
 fun main(args: Array<String>) {
 
     // Declare our Hasher
     val hash256 : Hash256 = Hash256()
+    val inputReader :InputReader
 
-    val userInput = readLine().toString()
+     val strings = InputReader()
 
-    println(userInput)
-
-
+    println(strings)
 
 
 
