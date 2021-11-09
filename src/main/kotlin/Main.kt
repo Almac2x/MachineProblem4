@@ -41,12 +41,13 @@ fun readInput() : HashMap<String,String>{
 
 fun check() {
 
-    val directory = File("files//") // gets
+    val directory = File("files//") // gets directory
     val numberOfBlocks = directory.list().size //size of the directory
-    val hashMapOfBlocks = mutableMapOf<String, String>() // hash of blocks inside the txt blocks
+    val hashMapOfBlocks = mutableMapOf<String, String>() // hash of blocks inside the txt blocks <FileName, Hash>
     var listFiles = directory.listFiles() // list of files in the directory
+    var listFilesMap = mutableMapOf<String,File>() // a map of files
 
-    var justHashFiles = mutableMapOf<String,String>()
+    var justHashFiles = mutableMapOf<String,String>() // a map of the files corresponding hashes
 
     // Declare our Hasher
     val shaDigest = MessageDigest.getInstance("SHA-256")
@@ -58,39 +59,93 @@ fun check() {
         hashMapOfBlocks[file.name] = file.readLines().last() // gets the last line of the txt file which are the hash of the previous block
         //hashes all the txt blocks again to compare the contents of the txt blocks
         justHashFiles[file.name] = hash256.getFileChecksum(shaDigest,File("files//${file.name}")).toString()
-    }
 
-    val accountedBlocks = mutableListOf<String>()
-    //check if all blocks are accounted for
-    for(i in 0 until numberOfBlocks){
-        val block = "block${i}"
-        if(hashMapOfBlocks[block] != null){ // checks if the block is in order and name did not change
-            accountedBlocks.add(block)
-        }
-        else
-            break
-    }
-
-
-    // countdown to zero
-    for (i in hashMapOfBlocks.size-1 downTo  0 ){
-
-        if( i == hashMapOfBlocks.size-1){
-            if(hashMapOfBlocks["trailingBlock"] == justHashFiles["block${i-1}"])
-                println(true)
-
-        }else {
-            if(hashMapOfBlocks["block${i}"] == justHashFiles["block${i-1}"]){
-                println(true)
-            }
-            else
-                false
-        }
+       listFilesMap[file.name] = file //adds the files into a hashmap
     }
 
     // check if all the blocks are chained together to know if one is tampered
 
     //gets the hash of each txt block inside
+    //Start of tampering here
+
+    println("Block Statuses:")
+
+    val accountedBlocks = mutableMapOf<String,File>()
+    //check if all blocks are accounted for
+    for(i in 0 until numberOfBlocks){
+        val blockName = "block${i}"
+        if(hashMapOfBlocks[blockName] != null){ // checks if the block is in order and name did not change
+            accountedBlocks[blockName] = listFilesMap[blockName] as File
+        }
+        else
+            break // it will break if the iteration of the blocks is inconsistent
+    }
+
+
+    val blockStatuses = mutableMapOf<String,String>()
+    // countdown to zero
+    //checks if each block hash value has a chain to
+    for (i in hashMapOfBlocks.size-1 downTo  0 ){
+        if (i == 0)
+            break
+
+        if( i == hashMapOfBlocks.size-1){
+            if(hashMapOfBlocks["trailingBlock"] == justHashFiles["block${i-1}"])
+                blockStatuses["block${i-1}"] = "Ok"
+            else
+                blockStatuses["block${i-1}"] = "Tampered"
+
+        }else {
+            if(hashMapOfBlocks["block${i}"] == justHashFiles["block${i-1}"]){
+                blockStatuses["block${i-1}"] = "Ok"
+            }
+            else
+                blockStatuses["block${i-1}"] = "Tampered"
+        }
+    }
+
+    //print statuses
+    blockStatuses.forEach(){
+        println("${it.key} - ${it.value}")
+    }
+
+ //end of checking tampering here
+
+println("\nAccount Balances")
+
+    //Start of Computing
+        //Initialize Input Reader
+    val inputReader = InputReader()
+
+    val accounts = mutableMapOf<String,Double>()
+    val genesisFile = accountedBlocks["block0"] as File
+
+    //get accounts and its values and assign it into accounts map
+
+    genesisFile.readLines().forEach(){
+        val inputRead = inputReader.readInput(it)
+        accounts[inputRead[0]] = inputRead[1].toDouble()
+    }
+
+    for (file in accountedBlocks){ // mutableMap is in the order that I inserted the values
+
+        if(file.key == "block0") // skips block 0 since it is just inserting the files
+            continue
+        else{ // starts from block 1
+
+            val transactions = file.value.readLines().toMutableList()
+            transactions.remove(transactions.last())
+
+            transactions.forEach(){
+                println(it)
+            }
+
+        }
+
+    }
+
+
+
 
     println()
 } // end of Check
