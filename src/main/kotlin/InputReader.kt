@@ -14,8 +14,11 @@ class InputReader{
         return when(depositPattern.containsMatchIn(line)){
 
             true ->{
-                var list = line.split(depositPattern) //
-                list = list+list.last().split(addPattern)
+                var list = line.split(depositPattern).toMutableList() //Gets the sender
+                var tempLast = list.last()
+                list.removeLast() // remove last string
+
+                list = (list + tempLast.split(addPattern).toMutableList()) as MutableList<String> // gets the recipient
                 return list
             } // for transfer pattern
 

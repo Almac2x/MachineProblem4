@@ -137,15 +137,25 @@ println("\nAccount Balances")
             transactions.remove(transactions.last())
 
             transactions.forEach(){
-                println(it)
+                 val transaction = inputReader.readInput(it)
+                 val sender = transaction[0]
+                 val recipient = transaction[1]
+                 val amountSent = transaction[2].toDouble()
+                accounts[sender] = accounts[sender] as Double - amountSent // remove the fund from sender
+                accounts[recipient] = accounts[recipient] as Double + amountSent // adds funds to recipient
             }
 
         }
 
     }
 
+    //end of computation
 
+    //print account balances
 
+    accounts.forEach(){
+        println("${it.key}, ${it.value}")
+    }
 
     println()
 } // end of Check
