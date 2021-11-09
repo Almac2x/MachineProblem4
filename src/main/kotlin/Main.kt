@@ -70,7 +70,7 @@ fun check() {
 
     println("Block Statuses:")
 
-    val accountedBlocks = mutableMapOf<String,File>()
+    var accountedBlocks = mutableMapOf<String,File>()
     //check if all blocks are accounted for
     for(i in 0 until numberOfBlocks){
         val blockName = "block${i}"
@@ -92,17 +92,28 @@ fun check() {
         if( i == hashMapOfBlocks.size-1){
             if(hashMapOfBlocks["trailingBlock"] == justHashFiles["block${i-1}"])
                 blockStatuses["block${i-1}"] = "Ok"
-            else
-                blockStatuses["block${i-1}"] = "Tampered"
+            else{
+                for(j in i until hashMapOfBlocks.size-1 ){
+                    blockStatuses["block${j-1}"] = "Tampered"
 
+                }
+            }
         }else {
             if(hashMapOfBlocks["block${i}"] == justHashFiles["block${i-1}"]){
                 blockStatuses["block${i-1}"] = "Ok"
             }
-            else
-                blockStatuses["block${i-1}"] = "Tampered"
+            else{
+                for(j in i until hashMapOfBlocks.size ){
+                    blockStatuses["block${j-1}"] = "Tampered"
+                }
+            }
+
         }
     }
+
+    accountedBlocks = accountedBlocks.filter { // filters the  non valid blocks
+        blockStatuses[it.key] != "Tampered"
+    } as MutableMap<String, File>
 
     //print statuses
     blockStatuses.forEach(){
