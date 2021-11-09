@@ -47,7 +47,7 @@ fun encode() {
 
     val inputReader : InputReader = InputReader()
     var currentBlock : Block? = null
-    var iterator : Int = 1
+    var iterator : Int = 1 // we start at 1
 
     do{
         if(currentBlock == null){
@@ -89,8 +89,8 @@ fun createBlockFile(blockNumber : Int, transactions : MutableList<String> ){
         for(i in 0 until transactions.size)
 
             if(i == transactions.size-1){
-                // <- Issue with this line
-                out.println(transactions[i].uppercase()+"\n"+ hash256.getFileChecksum(shaDigest, File("files//block0"))) //write the hash of the previous block
+
+                out.println(transactions[i].uppercase()+"\n"+ hash256.getFileChecksum(shaDigest, File("files//block${blockNumber-1}"))) //write the hash of the previous block
             }else{
                 out.println(transactions[i].uppercase())
             }
