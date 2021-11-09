@@ -1,6 +1,7 @@
 import java.io.File
 import java.io.InputStream
 import java.security.MessageDigest
+import java.util.Arrays.stream
 
 fun main(args: Array<String>) {
 
@@ -174,6 +175,9 @@ println("\nAccount Balances")
 
 
 fun encode() {
+
+    // delete contents in a directory (Kotlin)
+    stream(File("files//").listFiles()).forEach(File::delete)
 
     println("Type Ok to end each transaction ")
 
